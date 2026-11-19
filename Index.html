@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08111f">
+<title>PROJECT PULSE — Mathis</title>
+<style>
+:root{color-scheme:dark;--bg:#07101c;--panel:#101e30;--panel2:#172b42;--blue:#36b9ff;--cyan:#76e3ff;--muted:#a8bdd2;--line:#25415e;--gold:#ffd36a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 80% -10%,#12365a 0,transparent 38%),var(--bg);color:#f5f9ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{padding:26px 20px 24px;border-bottom:1px solid #1d3a57;background:linear-gradient(135deg,rgba(14,43,70,.95),rgba(7,16,28,.88))}
+.wrap{max-width:760px;margin:auto}
+.brand{font-weight:900;letter-spacing:.19em;color:var(--blue);font-size:14px}
+h1{font-size:clamp(30px,8vw,48px);line-height:1.02;margin:26px 0 9px;letter-spacing:-.04em}
+h1 span{color:var(--blue)}
+p{color:var(--muted);line-height:1.55}
+main{max-width:760px;margin:auto;padding:18px}
+.card{background:linear-gradient(145deg,rgba(20,39,60,.98),rgba(12,25,40,.98));border:1px solid var(--line);border-radius:19px;padding:19px;margin:15px 0;box-shadow:0 12px 35px #0003}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--blue);font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+.stat{background:#0a1929;border:1px solid #1b3a57;border-radius:13px;padding:13px}
+.stat small{display:block;color:var(--muted);font-size:10px;letter-spacing:.1em}
+.stat strong{display:block;font-size:25px;margin-top:5px}
+.progress{height:8px;background:#263b50;border-radius:99px;overflow:hidden;margin-top:12px}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#168de0,var(--cyan));transition:width .3s}
+h2{font-size:21px;margin:9px 0}
+button{border:0;border-radius:11px;background:linear-gradient(100deg,#087cc5,#16a9e9);color:white;padding:13px 17px;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px;width:100%;box-shadow:0 5px 18px #008de533}
+button:active{transform:scale(.985)}
+button.secondary{background:#263d55;box-shadow:none}
+button:disabled{opacity:.5;cursor:not-allowed}
+.option{display:flex;align-items:center;gap:10px;background:#0b1a2b;border:1px solid #233e58;padding:12px;border-radius:11px;margin:8px 0;cursor:pointer;color:#eaf4ff}
+.option input{accent-color:#21a7ed;width:18px;height:18px}
+input[type=text],input[type=number]{width:100%;background:#081625;color:white;border:1px solid #31516f;padding:13px;border-radius:10px;font-size:16px;margin-top:9px}
+.feedback{min-height:24px;font-weight:700}
+.good{color:#79f0ad}.bad{color:#ff9d9d}
+.lockrow{display:flex;align-items:center;gap:13px}
+.lockicon{font-size:30px}
+.pill{display:inline-block;border:1px solid #315777;border-radius:99px;padding:5px 9px;font-size:11px;color:var(--cyan)}
+footer{text-align:center;color:#688098;padding:25px 15px 35px;font-size:12px}
+.hidden{display:none!important}
+@media(min-width:600px){main{padding:24px}.card{padding:23px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="brand">⚡ PROJECT PULSE</div>
+ <h1>BIENVENUE,<br><span>MATHIS.</span></h1>
+ <p>Ton espace secret. Tes défis. Ta future aventure Garmin.</p>
+ <span class="pill">PROGRAMME PERSONNEL · ACCÈS MATHIS</span>
+</div></header>
+<main>
+ <section class="card">
+  <div class="eyebrow">TON TABLEAU DE BORD</div>
+  <div class="stats">
+   <div class="stat"><small>NIVEAU</small><strong id="level">1</strong></div>
+   <div class="stat"><small>EXPÉRIENCE</small><strong id="xp">0</strong></div>
+   <div class="stat"><small>DÉFIS VALIDÉS</small><strong id="count">0</strong></div>
+  </div>
+  <p id="progressText">0 / 500 XP vers le niveau suivant</p>
+  <div class="progress"><span id="progressBar"></span></div>
+ </section>
+
+ <section class="card" id="challenge1">
+  <div class="eyebrow">ÉPREUVE 01 · CONNAISSANCES</div>
+  <h2>Le capteur secret</h2>
+  <p>Quelle technologie mesure la fréquence cardiaque au poignet sur la Garmin Forerunner 165 ?</p>
+  <label class="option"><input type="radio" name="q1" value="gps"> GPS</label>
+  <label class="option"><input type="radio" name="q1" value="optique"> Capteur optique</label>
+  <label class="option"><input type="radio" name="q1" value="altimetre"> Altimètre barométrique</label>
+  <label class="option"><input type="radio" name="q1" value="wifi"> Wi-Fi</label>
+  <button id="submit1">Valider l'épreuve · 100 XP</button>
+  <p class="feedback" id="feedback1" aria-live="polite"></p>
+ </section>
+
+ <section class="card" id="challenge2">
+  <div class="eyebrow">ÉPREUVE 02 · CALCUL GPS</div>
+  <h2>Le calculateur d'allure</h2>
+  <p>Un coureur parcourt 10 km à une allure constante de 5 min 20 s par kilomètre. Quel est son temps total ?</p>
+  <label class="option"><input type="radio" name="q2" value="50"> 50 min</label>
+  <label class="option"><input type="radio" name="q2" value="5330"> 53 min 20 s</label>
+  <label class="option"><input type="radio" name="q2" value="5520"> 55 min 20 s</label>
+  <button id="submit2">Valider l'épreuve · 150 XP</button>
+  <p class="feedback" id="feedback2" aria-live="polite"></p>
+ </section>
+
+ <section class="card">
+  <div class="eyebrow">ZONE CONFIDENTIELLE</div>
+  <div class="lockrow"><div class="lockicon" id="lockIcon">🔒</div><div><h2>Le coffre de Mathis</h2><span class="pill" id="chestStatus">VERROUILLÉ</span></div></div>
+  <p>Un code secret à quatre chiffres protège ton message spécial. Résous les deux épreuves pour obtenir les indices.</p>
+  <p id="clue" class="hidden">Indice : le code correspond au nombre de la montre que tu attends, suivi d'un zéro.</p>
+  <input id="secretCode" type="text" inputmode="numeric" maxlength="4" placeholder="Code à 4 chiffres" aria-label="Code secret">
+  <button id="openChest">Déverrouiller le coffre</button>
+  <div id="chestContent" class="hidden">
+   <h2>🎁 COFFRE DÉVERROUILLÉ !</h2>
+   <p class="good"><strong>Félicitations, Mathis !</strong></p>
+   <p>Ton aventure Garmin approche. Prépare-toi à découvrir ta Forerunner 165, explorer ses fonctions et battre tes propres records. Le meilleur reste à venir !</p>
+   <span class="pill">SURPRISE DÉCOUVERTE</span>
+  </div>
+  <p class="feedback" id="chestFeedback" aria-live="polite"></p>
+ </section>
+
+ <section class="card">
+  <div class="eyebrow">TON PROGRAMME</div>
+  <h2>La suite arrive…</h2>
+  <p>De nouvelles épreuves, des défis sportifs réalisables sans montre et des surprises seront ajoutés à ton espace.</p>
+  <button class="secondary" id="reset">Réinitialiser la progression</button>
+ </section>
+</main>
+<footer>PROJECT PULSE · CRÉÉ POUR MATHIS</footer>
+<script>
+const KEY='projectPulseMathis_v1';
+let state={xp:0,passed:[],chest:false};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved.xp==='number'&&Array.isArray(saved.passed))state={...state,...saved};}catch(e){}
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function render(){
+ const level=Math.floor(state.xp/500)+1,within=state.xp%500;
+ $('xp').textContent=state.xp;$('level').textContent=level;$('count').textContent=state.passed.length;
+ $('progressText').textContent=within+' / 500 XP vers le niveau suivant';
+ $('progressBar').style.width=(within/500*100)+'%';
+ if(state.passed.includes(1)){$('feedback1').textContent='Épreuve réussie · +100 XP';$('feedback1').className='feedback good';$('submit1').disabled=true;}
+ if(state.passed.includes(2)){$('feedback2').textContent='Épreuve réussie · +150 XP';$('feedback2').className='feedback good';$('submit2').disabled=true;}
+ if(state.passed.length===2){$('clue').classList.remove('hidden');}
+ if(state.chest){$('chestContent').classList.remove('hidden');$('chestStatus').textContent='OUVERT';$('lockIcon').textContent='🔓';$('openChest').disabled=true;}
+}
+function checkQuestion(number,correct,points){
+ if(state.passed.includes(number))return;
+ const selected=document.querySelector('input[name="q'+number+'"]:checked');
+ const feedback=$('feedback'+number);
+ if(!selected){feedback.textContent='Choisis une réponse avant de valider.';feedback.className='feedback bad';return;}
+ if(selected.value===correct){state.xp+=points;state.passed.push(number);feedback.textContent='Bonne réponse ! +'+points+' XP 🎉';feedback.className='feedback good';}
+ else{feedback.textContent='Pas encore ! Relis bien la question et réessaie.';feedback.className='feedback bad';}
+ save();render();
+}
+$('submit1').addEventListener('click',()=>checkQuestion(1,'optique',100));
+$('submit2').addEventListener('click',()=>checkQuestion(2,'5330',150));
+$('openChest').addEventListener('click',()=>{
+ const value=$('secretCode').value.trim();
+ if(value==='1650'&&state.passed.length===2){state.chest=true;save();render();$('chestFeedback').textContent='Le coffre est ouvert !';$('chestFeedback').className='feedback good';}
+ else if(state.passed.length<2){$('chestFeedback').textContent='Termine d’abord les deux épreuves pour obtenir les indices.';$('chestFeedback').className='feedback bad';}
+ else{$('chestFeedback').textContent='Code incorrect. Vérifie l’indice !';$('chestFeedback').className='feedback bad';}
+});
+$('reset').addEventListener('click',()=>{
+ if(confirm('Effacer toute la progression de Mathis sur cet appareil ?')){state={xp:0,passed:[],chest:false};try{localStorage.removeItem(KEY);}catch(e){}location.reload();}
+});
+render();
+</script>
+</body>
+</html>
