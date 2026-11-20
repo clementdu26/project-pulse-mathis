@@ -39,6 +39,17 @@ input[type=text],input[type=number]{width:100%;background:#081625;color:white;bo
 .pill{display:inline-block;border:1px solid #315777;border-radius:99px;padding:5px 9px;font-size:11px;color:var(--cyan)}
 footer{text-align:center;color:#688098;padding:25px 15px 35px;font-size:12px}
 .hidden{display:none!important}
+/* Expérience secrète */
+#secretExperience{border-color:#168de0;box-shadow:0 0 35px #078de044}
+.watch{width:190px;margin:18px auto;padding:13px;border:5px solid #9db4c9;border-radius:34px;background:#050b13;box-shadow:0 0 0 4px #263c52,0 0 35px #16a9e966;text-align:center}
+.watchscreen{min-height:145px;border-radius:20px;background:radial-gradient(circle at 50% 0,#153d61,#06111e 75%);padding:18px 10px;display:flex;flex-direction:column;justify-content:center}
+.watchscreen strong{font-size:32px;color:#8ce8ff}.watchscreen span{color:#b9d8ed;font-size:12px;letter-spacing:.12em}
+.watchbuttons{display:flex;gap:8px}.watchbuttons button{font-size:12px;padding:11px 5px}
+#reveal{position:fixed;inset:0;z-index:20;background:radial-gradient(circle,#124d78,#030812 65%);display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;animation:fadein .35s ease}
+#reveal .revealbox{animation:pop .75s cubic-bezier(.2,.9,.2,1) both}
+#reveal h2{font-size:clamp(28px,8vw,44px);color:#8ce8ff;text-shadow:0 0 25px #16bfff}
+#reveal .burst{font-size:70px;animation:pulse 1s infinite alternate}
+@keyframes fadein{from{opacity:0}to{opacity:1}}@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}@keyframes pulse{to{transform:scale(1.18);filter:drop-shadow(0 0 18px #28c8ff)}}
 @media(min-width:600px){main{padding:24px}.card{padding:23px}}
 </style>
 </head>
@@ -87,17 +98,26 @@ footer{text-align:center;color:#688098;padding:25px 15px 35px;font-size:12px}
  <section class="card">
   <div class="eyebrow">ZONE CONFIDENTIELLE</div>
   <div class="lockrow"><div class="lockicon" id="lockIcon">🔒</div><div><h2>Le coffre de Mathis</h2><span class="pill" id="chestStatus">VERROUILLÉ</span></div></div>
-  <p>Un code secret à quatre chiffres protège ton message spécial. Résous les deux épreuves pour obtenir les indices.</p>
-  <p id="clue" class="hidden">Indice : le code correspond au nombre de la montre que tu attends, suivi d'un zéro.</p>
+  <p>Un code secret à quatre chiffres protège une expérience spéciale. Tu peux la découvrir quand tu veux, même si tu n'as pas terminé les défis.</p>
   <input id="secretCode" type="text" inputmode="numeric" maxlength="4" placeholder="Code à 4 chiffres" aria-label="Code secret">
   <button id="openChest">Déverrouiller le coffre</button>
   <div id="chestContent" class="hidden">
-   <h2>🎁 COFFRE DÉVERROUILLÉ !</h2>
-   <p class="good"><strong>Félicitations, Mathis !</strong></p>
-   <p>Ton aventure Garmin approche. Prépare-toi à découvrir ta Forerunner 165, explorer ses fonctions et battre tes propres records. Le meilleur reste à venir !</p>
-   <span class="pill">SURPRISE DÉCOUVERTE</span>
+   <h2>🎁 ACCÈS AUTORISÉ</h2>
+   <p class="good"><strong>Bienvenue dans le laboratoire PULSE, Mathis.</strong></p>
+   <p>Une expérience secrète t'attend juste en dessous.</p>
+   <span class="pill">MISSION SPÉCIALE · FORERUNNER 165</span>
   </div>
   <p class="feedback" id="chestFeedback" aria-live="polite"></p>
+ </section>
+
+ <section class="card hidden" id="secretExperience">
+  <div class="eyebrow">LABORATOIRE SECRET · SIMULATION</div>
+  <h2>Ta Forerunner 165 virtuelle</h2>
+  <p>Explore quelques écrans de ta future montre. C'est une simulation interactive : les valeurs affichées sont fictives.</p>
+  <div class="watch"><div class="watchscreen"><span id="watchLabel">ÉCRAN D'ACCUEIL</span><strong id="watchValue">18:165</strong><span id="watchSub">PROJECT PULSE</span></div></div>
+  <div class="watchbuttons"><button class="secondary" id="watchPrev">◀ Retour</button><button id="watchNext">Suivant ▶</button></div>
+  <p class="feedback" id="watchFeedback" aria-live="polite">Fais défiler les écrans de la montre.</p>
+  <button class="secondary" id="finishSecret">Terminer l'expérience</button>
  </section>
 
  <section class="card">
@@ -121,8 +141,7 @@ function render(){
  $('progressBar').style.width=(within/500*100)+'%';
  if(state.passed.includes(1)){$('feedback1').textContent='Épreuve réussie · +100 XP';$('feedback1').className='feedback good';$('submit1').disabled=true;}
  if(state.passed.includes(2)){$('feedback2').textContent='Épreuve réussie · +150 XP';$('feedback2').className='feedback good';$('submit2').disabled=true;}
- if(state.passed.length===2){$('clue').classList.remove('hidden');}
- if(state.chest){$('chestContent').classList.remove('hidden');$('chestStatus').textContent='OUVERT';$('lockIcon').textContent='🔓';$('openChest').disabled=true;}
+  if(state.chest){$('chestContent').classList.remove('hidden');$('secretExperience').classList.remove('hidden');$('chestStatus').textContent='OUVERT';$('lockIcon').textContent='🔓';$('openChest').disabled=true;}
 }
 function checkQuestion(number,correct,points){
  if(state.passed.includes(number))return;
@@ -135,16 +154,32 @@ function checkQuestion(number,correct,points){
 }
 $('submit1').addEventListener('click',()=>checkQuestion(1,'optique',100));
 $('submit2').addEventListener('click',()=>checkQuestion(2,'5330',150));
+const screens=[
+ ['ÉCRAN D’ACCUEIL','18:165','PROJECT PULSE'],
+ ['FRÉQUENCE CARDIAQUE','72','BPM · VALEUR FICTIVE'],
+ ['GPS','SIGNAL OK','POSITION SIMULÉE'],
+ ['ACTIVITÉ','COURSE','PRÊT À DÉMARRER'],
+ ['OBJECTIF DU JOUR','5 000','PAS · DÉFI EXEMPLE']
+];
+let screenIndex=0;
+function showWatch(){const a=screens[screenIndex];$('watchLabel').textContent=a[0];$('watchValue').textContent=a[1];$('watchSub').textContent=a[2];}
+function revealSecret(){
+ $('chestContent').classList.remove('hidden');$('secretExperience').classList.remove('hidden');$('chestStatus').textContent='OUVERT';$('lockIcon').textContent='🔓';$('openChest').disabled=true;
+ const layer=document.createElement('div');layer.id='reveal';layer.innerHTML='<div class="revealbox"><div class="burst">⌚✨</div><div class="eyebrow">PROJECT PULSE · ACCÈS SECRET</div><h2>MISSION DÉBLOQUÉE</h2><p>La Forerunner 165 t’attend, Mathis.</p><button id="enterLab">Entrer dans le laboratoire</button></div>';
+ document.body.appendChild(layer);$('enterLab').addEventListener('click',()=>{layer.remove();$('secretExperience').scrollIntoView({behavior:'smooth'});});
+}
 $('openChest').addEventListener('click',()=>{
  const value=$('secretCode').value.trim();
- if(value==='1650'&&state.passed.length===2){state.chest=true;save();render();$('chestFeedback').textContent='Le coffre est ouvert !';$('chestFeedback').className='feedback good';}
- else if(state.passed.length<2){$('chestFeedback').textContent='Termine d’abord les deux épreuves pour obtenir les indices.';$('chestFeedback').className='feedback bad';}
- else{$('chestFeedback').textContent='Code incorrect. Vérifie l’indice !';$('chestFeedback').className='feedback bad';}
+ if(value==='1650'){state.chest=true;save();revealSecret();$('chestFeedback').textContent='Code accepté !';$('chestFeedback').className='feedback good';}
+ else{$('chestFeedback').textContent='Code incorrect. Réessaie !';$('chestFeedback').className='feedback bad';}
 });
+$('watchNext').addEventListener('click',()=>{screenIndex=(screenIndex+1)%screens.length;showWatch();});
+$('watchPrev').addEventListener('click',()=>{screenIndex=(screenIndex+screens.length-1)%screens.length;showWatch();});
+$('finishSecret').addEventListener('click',()=>{$('watchFeedback').textContent='Mission terminée. Tu peux revenir explorer quand tu veux !';$('watchFeedback').className='feedback good';});
 $('reset').addEventListener('click',()=>{
  if(confirm('Effacer toute la progression de Mathis sur cet appareil ?')){state={xp:0,passed:[],chest:false};try{localStorage.removeItem(KEY);}catch(e){}location.reload();}
 });
-render();
+render();showWatch();
 </script>
 </body>
 </html>
